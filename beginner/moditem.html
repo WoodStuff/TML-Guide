@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>tModLoader Guide</title>
+
+		<link rel="stylesheet" href="../style.css">
+		<link rel="stylesheet" href="../prism.css">
+	</head>
+
+	<body>
+		<h1>ModItems</h1>
+		<p>ModItem is the simplest class. It is the class that every item derives from, including weapons,
+			accessories, and armor.</p>
+
+		<h2>Creating an item</h2>
+		<p>Let's create a simple item. Create a new class in Content -> Items and name it whatever you want.
+			I'll call it TestItem.<br>
+			A common mistake for naming the class is using spaces, apostrophes or any other special character.
+			The computer won't understand this. In general, it's best to only use letters.</p>
+		<p>Like any other mod element, the item's class must be public and derive from the correct base element class.
+			In our case this class is <code>ModItem</code>.<br>
+			It should look like this:</p>
+		<pre><code class="language-cs">using Terraria; // these two will be needed later on
+using Terraria.ID; // these two will be needed later on
+using Terraria.ModLoader; // important!
+
+namespace TutorialMod.Content.Items
+{
+	public class TestItem : ModItem
+	{
+	}
+}</code></pre>
+		<p>This is the base of a ModItem.<br>
+			The texture is a very important part of an item, so we'll go over that next.</p>
+
+		<h2>Texturing the item</h1>
+		<p>Terraria's sprites use a style where each visible "pixel" is actually a 2x2 square of pixels.
+			A really easy way to make sprites like this is by first drawing the sprite in regular 1x1 pixels,
+			then resize the sprite 2x using the Nearest Neighbor option.<br>
+			Keep in mind the texture has to be a png file.<br>
+			If you don't have a texture, you can use
+			<a href="https://github.com/tModLoader/tModLoader/blob/1.4.4/ExampleMod/Content/Items/ExampleItem.png">
+				a texture like this</a> or anything else from ExampleMod.</p>
+		<p>Once the texture is ready, drop it into the same folder as your item file and make sure it's named
+			just like your item class' name - in my case, <code>TestItem.png</code>.</p>
+
+		<h2>Item properties</h1>
+		<p>Now we are ready to customize the item. There are two "hooks" (methods)
+			that serve this purpose - <code>SetDefaults</code> and <code>SetStaticDefaults</code>.
+		</p>
+		<p>Most properties are set in the <code>SetDefaults</code> hook.
+			If you're coding in Visual Studio, you can type <code>override</code> to search for the hooks
+			you can override, including SetDefaults.<br>
+			Item properties are set like this: <code>Item.maxStack = 100;</code> This property, for example, sets
+			the maximum amount of items in a stack to 100.</p>
+		<p>A really basic item's structure would look like this:</p>
+		<pre><code class="language-cs">using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items
+{
+	public class TestItem : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
+			// modify external sets here
+		}
+
+		public override void SetDefaults()
+		{
+			// item properties here
+			Item.maxStack = 100; // make the item stackable up to 100
+		}
+	}
+}</code></pre>
+		<p>Below are the most important things you can set for regular items.<br></p>
+		
+		<table>
+			<tr>
+				<th style="width: 10%;">Property</th>
+				<th style="width: 10%;">Data Type</th>
+				<th style="width: 30%;">Meaning</th>
+				<th style="width: 50%;">Tips</th>
+			</tr>
+			<tr>
+				<td><code>Item.width</code><br><code>Item.height</code></td>
+				<td><code>int</code></td>
+				<td>The size of the item's sprite when held, dropped etc.</td>
+				<td>Set this to the texture's width and height respectively.</td>
+			</tr>
+			<tr>
+				<td><code>Item.maxStack</code></td>
+				<td><code>int</code></td>
+				<td>The maximum amount of items a stack can hold.</td>
+				<td>For most items, you should set this to <code>Item.CommonMaxStack</code>,
+					which evaluates to 9999.<br>
+					If it doesn't understand, add <code>using Terraria;</code> to the top.</td>
+			</tr>
+			<tr>
+				<td><code>Item.value</code></td>
+				<td><code>int</code></td>
+				<td>The amount of copper coins this item can be bought for, which is 5x the sell price.</td>
+				<td>Use <code>Item.sellPrice(p, g, s, c)</code> to generate a value from the sell price.<br>
+					For example, an item that sells for 21 gold, 55 silver and 50 copper:<br>
+					<code>Item.value = Item.sellPrice(0, 21, 55, 50);</code><br>
+					You can also use <code>Item.buyPrice(p, g, s, c)</code>.</td>
+			</tr>
+			<tr>
+				<td><code>Item.rare</code></td>
+				<td><code>ItemRarityID</code></td>
+				<td>The item's rarity (color of the name).</td>
+				<td>Use with ItemRarityID, something like: <code>Item.rare = ItemRarityID.Blue;</code></td>
+			</tr>
+		</table>
+
+		<p>There are many more properties specific to weapons, armor and other specific things, but they will be
+			introduced later when we learn about them.<br>
+			A full list of item properties
+			<a href="https://github.com/tModLoader/tModLoader/wiki/Item-Class-Documentation">can be found here</a>.</p>
+		<p>Here is an example item with these 5 properties filled out:</p>
+		<pre><code class="language-cs">using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items
+{
+	public class TestItem : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
+			
+		}
+
+		public override void SetDefaults()
+		{
+			Item.width = 26;
+			Item.height = 26;
+			Item.maxStack = Item.CommonMaxStack;
+			Item.value = Item.sellPrice(0, 0, 10, 0);
+			Item.rare = ItemRarityID.Blue;
+		}
+	}
+}</code></pre>
+		
+		<script src="../prism.js"></script>
+	</body>
+</html>
