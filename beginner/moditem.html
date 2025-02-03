@@ -26,11 +26,10 @@
 using Terraria.ID; // these two will be needed later on
 using Terraria.ModLoader; // important!
 
-namespace TutorialMod.Content.Items
+namespace TutorialMod.Content.Items;
+
+public class TestItem : ModItem
 {
-	public class TestItem : ModItem
-	{
-	}
 }</code></pre>
 		<p>This is the base of a ModItem.<br>
 			The texture is a very important part of an item, so we'll go over that next.</p>
@@ -60,20 +59,19 @@ namespace TutorialMod.Content.Items
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace TutorialMod.Content.Items
-{
-	public class TestItem : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-			// modify external sets here
-		}
+namespace TutorialMod.Content.Items; // this is a file-scoped namespace, which looks cleaner
 
-		public override void SetDefaults()
-		{
-			// item properties here
-			Item.maxStack = 100; // make the item stackable up to 100
-		}
+public class TestItem : ModItem
+{
+	public override void SetStaticDefaults()
+	{
+		// modify external sets here
+	}
+
+	public override void SetDefaults()
+	{
+		// item properties here
+		Item.maxStack = 100; // make the item stackable up to 100
 	}
 }</code></pre>
 		<p>Below are the most important things you can set for regular items.<br></p>
@@ -125,26 +123,43 @@ namespace TutorialMod.Content.Items
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace TutorialMod.Content.Items
-{
-	public class TestItem : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
-			
-		}
+namespace TutorialMod.Content.Items;
 
-		public override void SetDefaults()
-		{
-			Item.width = 26; // sprite texture (after upscaling) is 26x26
-			Item.height = 26; // sprite texture (after upscaling) is 26x26
-			Item.maxStack = Item.CommonMaxStack; // regular item stackable to 9999
-			Item.value = Item.sellPrice(0, 0, 10, 0); // a single item sells for 10 silver
-			Item.rare = ItemRarityID.Blue; // blue rarity
-		}
+public class TestItem : ModItem
+{
+	public override void SetStaticDefaults()
+	{
+		
+	}
+
+	public override void SetDefaults()
+	{
+		Item.width = 26; // sprite texture (after upscaling) is 26x26
+		Item.height = 26; // sprite texture (after upscaling) is 26x26
+		Item.maxStack = Item.CommonMaxStack; // regular item stackable to 9999
+		Item.value = Item.sellPrice(0, 0, 10, 0); // a single item sells for 10 silver
+		Item.rare = ItemRarityID.Blue; // blue rarity
 	}
 }</code></pre>
-		
+		<p>This is now a fully functional item. You can now go into tModLoader, build and reload the mod (important!),
+			and use a mod like <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2563784437">Cheat Sheet</a>
+			to give yourself the item, which has all the properties we set.
+		</p>
+
+		<h2>Static Defaults</h2>
+		<p>The <code>SetStaticDefaults</code> hook also sets item properties, but in a different way.<br>
+			Outside the item classes, the game holds "sets" - key-value pairs, which encode additional info
+			about each item. These can be like the research count for journey mode, or if the item floats
+			when dropped (like souls).</p>
+		<p>There is one property that is simpler to set than the rest - the number of items needed to
+			research an item in Journey Mode.<br>
+			You set this one just like the <code>SetDefaults</code> properties, difference being that you have
+			to put it in the other method:</p>
+		<pre><code class="language-cs">public override void SetStaticDefaults()
+{
+	Item.ResearchUnlockCount = 100; // 100 items are needed to unlock duplication for this item
+}</code></pre>
+
 		<script src="../prism.js"></script>
 	</body>
 </html>
