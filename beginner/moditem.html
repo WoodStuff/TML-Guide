@@ -145,12 +145,20 @@ public class TestItem : ModItem
 			and use a mod like <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2563784437">Cheat Sheet</a>
 			to give yourself the item, which has all the properties we set.
 		</p>
+		<p><b>Tip:</b> You can add this hook into the class (alongside the two other hooks) to be able to craft it
+			with a single dirt block, for testing.</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	Recipe recipe = CreateRecipe();
+	recipe.AddIngredient(ItemID.DirtBlock);
+	recipe.Register();
+}</code></pre>
 
 		<h2>Static Defaults</h2>
 		<p>The <code>SetStaticDefaults</code> hook also sets item properties, but in a different way.<br>
 			Outside the item classes, the game holds "sets" - key-value pairs, which encode additional info
 			about each item. These can be like the research count for journey mode, or if the item floats
-			when dropped (like souls).</p>
+			when dropped (like souls). You don't need to set any of these properties, or any at all.</p>
 		<p>There is one property that is simpler to set than the rest - the number of items needed to
 			research an item in Journey Mode.<br>
 			You set this one just like the <code>SetDefaults</code> properties, difference being that you have
@@ -159,6 +167,28 @@ public class TestItem : ModItem
 {
 	Item.ResearchUnlockCount = 100; // 100 items are needed to unlock duplication for this item
 }</code></pre>
+		<p>The rest of the properties are accessed like: <code>ItemID.Sets.SomeProperty[Type]</code>, where you
+			replace <code>SomeProperty</code> with the property you want to change. Visual Studio should be able to
+			show a list of all the properties, but here are some useful ones:</p>
+
+		<table>
+			<tr>
+				<th style="width: 20%;">Property</th>
+				<th style="width: 10%;">Data Type</th>
+				<th style="width: 70%;">Meaning</th>
+			</tr>
+			<tr>
+				<td><code>ItemID.Sets.ItemNoGravity[Type]</code></td>
+				<td><code>bool</code></td>
+				<td>Decides if the item should float in the air when dropped, like souls.</td>
+			</tr>
+			<tr>
+				<td><code>ItemID.Sets.ItemIconPulse[Type]</code></td>
+				<td><code>bool</code></td>
+				<td>Decides if the item should pulse (sprite grows and shrinks) in the inventory and when dropped,
+					like souls.</td>
+			</tr>
+		</table>
 
 		<script src="../prism.js"></script>
 	</body>
