@@ -136,11 +136,11 @@ namespace TutorialMod.Content.Items
 
 		public override void SetDefaults()
 		{
-			Item.width = 26;
-			Item.height = 26;
-			Item.maxStack = Item.CommonMaxStack;
-			Item.value = Item.sellPrice(0, 0, 10, 0);
-			Item.rare = ItemRarityID.Blue;
+			Item.width = 26; // sprite texture (after upscaling) is 26x26
+			Item.height = 26; // sprite texture (after upscaling) is 26x26
+			Item.maxStack = Item.CommonMaxStack; // regular item stackable to 9999
+			Item.value = Item.sellPrice(0, 0, 10, 0); // a single item sells for 10 silver
+			Item.rare = ItemRarityID.Blue; // blue rarity
 		}
 	}
 }</code></pre>
