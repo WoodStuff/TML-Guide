@@ -13,8 +13,16 @@
 		<h1>ModItems</h1>
 		<p>ModItem is the simplest class. It is the class that every item derives from, including weapons,
 			accessories, and armor.</p>
+		<p>Table of contents:</p>
+		<ol>
+			<li><a href="#1">Creating an item</a> - coding the base for the item</li>
+			<li><a href="#2">Texturing the item</a> - giving the item a texture</li>
+			<li><a href="#3">Item properties</a> - customizing the item</li>
+			<li><a href="#4">Static Defaults</a> - extra specific properties, optional</li>
+			<li><a href="#5">Display name and tooltip</a> - adding a tooltip, optional</li>
+		</ol>
 
-		<h2>Creating an item</h2>
+		<h2 id="1">Creating an item</h2>
 		<p>Let's create a simple item. Create a new class in Content -> Items and name it whatever you want.
 			I'll call it TestItem.<br>
 			A common mistake for naming the class is using spaces, apostrophes or any other special character.
@@ -34,7 +42,7 @@ public class TestItem : ModItem
 		<p>This is the base of a ModItem.<br>
 			The texture is a very important part of an item, so we'll go over that next.</p>
 
-		<h2>Texturing the item</h1>
+		<h2 id="2">Texturing the item</h2>
 		<p>Terraria's sprites use a style where each visible "pixel" is actually a 2x2 square of pixels.
 			A really easy way to make sprites like this is by first drawing the sprite in regular 1x1 pixels,
 			then resize the sprite 2x using the Nearest Neighbor option.<br>
@@ -45,7 +53,7 @@ public class TestItem : ModItem
 		<p>Once the texture is ready, drop it into the same folder as your item file and make sure it's named
 			just like your item class' name - in my case, <code>TestItem.png</code>.</p>
 
-		<h2>Item properties</h1>
+		<h2 id="3">Item properties</h2>
 		<p>Now we are ready to customize the item. There are two "hooks" (methods)
 			that serve this purpose - <code>SetDefaults</code> and <code>SetStaticDefaults</code>.
 		</p>
@@ -154,7 +162,7 @@ public class TestItem : ModItem
 	recipe.Register();
 }</code></pre>
 
-		<h2>Static Defaults</h2>
+		<h2 id="4">Static Defaults</h2>
 		<p>The <code>SetStaticDefaults</code> hook also sets item properties, but in a different way.<br>
 			Outside the item classes, the game holds "sets" - key-value pairs, which encode additional info
 			about each item. These can be like the research count for journey mode, or if the item floats
@@ -188,7 +196,37 @@ public class TestItem : ModItem
 				<td>Decides if the item should pulse (sprite grows and shrinks) in the inventory and when dropped,
 					like souls.</td>
 			</tr>
+			<tr>
+				<td><code>ItemID.Sets.OreDropsFromSlime[Type]</code></td>
+				<td><code>(int, int)</code></td>
+				<td>Makes an item a rare drop from slimes if it's an ore.<br>
+					The type represents the minimum and maximum amounts droppable. This is a tuple - you can create
+					one like <code>(3, 13)</code>.</td>
+			</tr>
 		</table>
+
+		<p>Here is a <code>SetStaticDefaults</code> that would hypothetically implement all of these properties:</p>
+		<pre><code class="language-cs">public override void SetStaticDefaults()
+{
+	Item.ResearchUnlockCount = 100;
+	ItemID.Sets.ItemNoGravity[Type] = true; // item floats in the air
+	ItemID.Sets.ItemIconPulse[Type] = true; // item pulses in inventory
+	ItemID.Sets.OreDropsFromSlime[Type] = (3, 13); // all ores use this value
+}</code></pre>
+		<p>Again, not every item has to set these properties. It's usually enough to just set the research
+			unlock count.</p>
+
+		<h2 id="5">Display name and tooltip</h2>
+		<p>The file at Localization -> <code>en-US_Mods.modname.hjson</code> stores items' display names
+			and tooltips. These get automatically generated on Build and Reload.<br>
+			When you build and reload, something like this should appear in the file:</p>
+		<pre><code class="language-hjson">TestItem: {
+	DisplayName: Test Item
+	Tooltip: ""
+}</code></pre>
+		<p>You can change these two values if you want to, but usually these default values work fine. You can omit
+			the quotes in the Tooltip if you're going to add one.<br>
+			Multiline tooltips can be written between ''' marks, like the Example Sword does it.</p>
 
 		<script src="../prism.js"></script>
 	</body>
