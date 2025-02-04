@@ -18,8 +18,10 @@
 			<li><a href="#1">Creating an item</a> - coding the base for the item</li>
 			<li><a href="#2">Texturing the item</a> - giving the item a texture</li>
 			<li><a href="#3">Item properties</a> - customizing the item</li>
-			<li><a href="#4">Static Defaults</a> - extra specific properties, optional</li>
-			<li><a href="#5">Display name and tooltip</a> - adding a tooltip, optional</li>
+			<li><a href="#4">Adding a crafting recipe</a> - making the item obtainable</li>
+			<li><a href="#5">Static Defaults</a> - extra specific properties, optional</li>
+			<li><a href="#6">Display name and tooltip</a> - adding a tooltip, optional</li>
+			<li><a href="#7">Final example</a> - a full item file</li>
 		</ol>
 
 		<h2 id="1">Creating an item</h2>
@@ -149,20 +151,61 @@ public class TestItem : ModItem
 		Item.rare = ItemRarityID.Blue; // blue rarity
 	}
 }</code></pre>
-		<p>This is now a fully functional item. You can now go into tModLoader, build and reload the mod (important!),
-			and use a mod like <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2563784437">Cheat Sheet</a>
-			to give yourself the item, which has all the properties we set.
-		</p>
-		<p><b>Tip:</b> You can add this hook into the class (alongside the two other hooks) to be able to craft it
-			with a single dirt block, for testing.</p>
+		<p>This is now a fully functional item. While it exists, it's unobtainable, so the next step is making it
+			craftable.</p>
+		<p><b>Tip:</b> You can use a mod like
+			<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2563784437">Cheat Sheet</a>
+			to give yourself any item for testing, so you can obtain it even if it's not craftable yet.</p>
+
+		<h2 id="4">Adding a crafting recipe</h2>
+		<p>Crafting recipes are added in another hook, <code>AddRecipes</code>. In other words, it's a method that goes
+			alongside the two SetDefaults hooks.</p>
+		<p>Each recipe starts by creating a <code>Recipe</code> variable through <code>CreateRecipe()</code>:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	Recipe recipe = CreateRecipe(); // create a recipe resulting in this item
+	// ...
+}</code></pre>
+		<p>Now we can start adding ingredients. To do that, you call <code>recipe.AddIngredient()</code>.
+			This method takes two parameters.<br>
+			The first parameter is the item used as the ingredient. You can use <code>ItemID</code>
+			to represent an item for this, like <code>ItemID.StoneBlock</code> for stone. If you use
+			Visual Studio, it should autocomplete the IDs, otherwise you can use
+			<a href="https://terraria.wiki.gg/wiki/Item_IDs">this wiki page</a>.<br>
+			The second parameter is the amount of the item needed. You can leave this blank if you only
+			use one item.</p>
+		<p>A few examples:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	Recipe recipe = CreateRecipe(); // start the recipe
+	recipe.AddIngredient(ItemID.StoneBlock, 10); // 10 stone blocks
+	recipe.AddIngredient(ItemID.DirtBlock, 250); // 250 dirt blocks
+	recipe.AddIngredient(ItemID.IronShortsword); // a single iron shortsword
+	recipe.Register(); // add the recipe to the game
+}</code></pre>
+		<p>Now the recipe is craftable in-game!</p>
+		<p>As you can see, there is a <code>recipe.Register()</code> at the end. You add this to the end
+			to make sure the recipe gets registered to the game.</p>
+		<p>You can make the recipe craft multiple items by adding an argument to <code>CreateRecipe()</code>:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	Recipe recipe = CreateRecipe(10); // 10 TestItems are crafted from this method
+	recipe.AddIngredient(ItemID.HellstoneBar); // recipe takes in a single hellstone bar
+	recipe.Register(); // 1 hellstone bar -> 10 TestItems
+}</code></pre>
+		<p>To make the recipe require a crafting station, you can use <code>AddTile()</code>. This time, you use
+			<code>TileID</code> for the argument.
+			<a href="https://terraria.wiki.gg/wiki/Tile_IDs">Here is a wiki page</a> for the tile IDs.<br>
+			Here is a recipe making the item only craftable at an anvil:</p>
 		<pre><code class="language-cs">public override void AddRecipes()
 {
 	Recipe recipe = CreateRecipe();
-	recipe.AddIngredient(ItemID.DirtBlock);
+	recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
+	recipe.AddTile(TileID.Anvils); // make item craftable at any anvil (regular & hardmode)
 	recipe.Register();
 }</code></pre>
 
-		<h2 id="4">Static Defaults</h2>
+		<h2 id="5">Static Defaults</h2>
 		<p>The <code>SetStaticDefaults</code> hook also sets item properties, but in a different way.<br>
 			Outside the item classes, the game holds "sets" - key-value pairs, which encode additional info
 			about each item. These can be like the research count for journey mode, or if the item floats
@@ -216,7 +259,7 @@ public class TestItem : ModItem
 		<p>Again, not every item has to set these properties. It's usually enough to just set the research
 			unlock count.</p>
 
-		<h2 id="5">Display name and tooltip</h2>
+		<h2 id="6">Display name and tooltip</h2>
 		<p>The file at Localization -> <code>en-US_Mods.modname.hjson</code> stores items' display names
 			and tooltips. These get automatically generated on Build and Reload.<br>
 			When you build and reload, something like this should appear in the file:</p>
@@ -227,6 +270,41 @@ public class TestItem : ModItem
 		<p>You can change these two values if you want to, but usually these default values work fine. You can omit
 			the quotes in the Tooltip if you're going to add one.<br>
 			Multiline tooltips can be written between ''' marks, like the Example Sword does it.</p>
+
+		<h2 id="7">Final example</h2>
+		<p>A completed item file would look something like this:</p>
+		<pre><code class="language-cs">using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items;
+
+public class TestItem : ModItem
+{
+	public override void SetStaticDefaults()
+	{
+		Item.ResearchUnlockCount = 100; // 100 items are needed to unlock duplication for this item
+		ItemID.Sets.ItemNoGravity[Type] = true; // item floats in the air when dropped
+	}
+
+	public override void SetDefaults()
+	{
+		Item.width = 26; // sprite texture (after upscaling) is 26x26
+		Item.height = 26; // sprite texture (after upscaling) is 26x26
+		Item.maxStack = Item.CommonMaxStack; // regular item stackable to 9999
+		Item.value = Item.sellPrice(0, 0, 10, 0); // a single item sells for 10 silver
+		Item.rare = ItemRarityID.Blue; // blue rarity
+	}
+
+	public override void AddRecipes()
+	{
+		Recipe recipe = CreateRecipe(5); // start the recipe - crafts 5 TestItems
+		recipe.AddIngredient(ItemID.SandBlock, 10); // ingredient: 10 sand blocks
+		recipe.AddIngredient(ItemID.CopperBar); // ingredient: 1 copper bar
+		recipe.AddTile(TileID.WorkBenches); // make the item craftable at a workbench
+		recipe.Register(); // add the recipe to the game
+	}
+}</code></pre>
 
 		<br>
 
