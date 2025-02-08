@@ -1,16 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>tModLoader Guide</title>
+		<title>ModItem - tModLoader Guide</title>
 
 		<link rel="stylesheet" href="../style.css">
 		<link rel="stylesheet" href="../prism.css">
 	</head>
 
 	<body>
-		<h1>ModItems</h1>
+		<h1>ModItem</h1>
 		<p>ModItem is the simplest class. It is the class that every item derives from, including weapons,
 			accessories, and armor.</p>
 		<p>Table of contents:</p>
@@ -204,6 +205,7 @@ public class TestItem : ModItem
 	recipe.AddTile(TileID.Anvils); // make item craftable at any anvil (regular & hardmode)
 	recipe.Register();
 }</code></pre>
+		<p>Crafting recipes are explored more thorougly in the <a href="recipes.html">recipe guide</a>.</p>
 
 		<h2 id="5">Static Defaults</h2>
 		<p>The <code>SetStaticDefaults</code> hook also sets item properties, but in a different way.<br>

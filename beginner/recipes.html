@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Recipes - tModLoader Guide</title>
+
+		<link rel="stylesheet" href="../style.css">
+		<link rel="stylesheet" href="../prism.css">
+	</head>
+
+	<body>
+		<h1>Recipes</h1>
+		<p>In the <a href="moditem.html">ModItem guide</a>, we learned how to make a simple crafting recipe.
+			This guide expands on that concept.</p>
+		<p>Table of contents:</p>
+		<ol>
+			<li><a href="#1">Creating a modded item recipe</a> - making an item obtainable</li>
+			<li><a href="#2">Crafting station requirement</a> - specifying a tile needed to craft the item</li>
+			<li><a href="#3">Chain syntax</a> - a cleaner way to make recipes</li>
+			<li><a href="#4">Modded ingredients</a> - using ModItems as ingredients</li>
+			<li><a href="#5">Recipe Groups</a> - allowing similar items to be used as one ingredient</li>
+			<li><a href="#6">Conditions</a> - limiting the recipe to only be craftable under some conditions</li>
+		</ol>
+
+		<h2 id="1">Creating a modded item recipe</h2>
+		<p>To create a recipe for a ModItem, you override the <code>AddRecipes()</code> method and declare
+			a <code>Recipe</code> variable using <code>CreateRecipe()</code>.<br></p>
+		<pre><code class="language-cs">using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items;
+
+public class TestItem : ModItem
+{
+	// SetStaticDefaults, SetDefaults
+
+	public override void AddRecipes()
+	{
+		Recipe recipe = CreateRecipe(); // create a recipe resulting in this item
+		// add ingredients, etc...
+	}
+}</code></pre>
+		<p>You can then add ingredients using <code>recipe.AddIngredient()</code>, which takes two arguments.<br>
+		The first argument is the item used as the ingredient. You can use <code>ItemID.SomeItem</code>
+		to represent an item for this, replacing <code>SomeItem</code> with the item ID. You can find
+		a <a href="https://terraria.wiki.gg/wiki/Item_IDs">list of IDs here</a>, or if you're working
+		with Visual Studio, it'll autocomplete the IDs.<br>
+		The second argument specifies how many of the item is needed.</p>
+		<p>After you do all this, you call <code>recipe.Register()</code> to make sure the recipe gets
+			added to the game.</p>
+		<p>An example recipe, where you use 25 clay and 5 stone to craft the ModItem:</p>
+		<pre><code class="language-cs">public override void AddRecipes() {
+	Recipe recipe = CreateRecipe(); // new recipe
+	recipe.AddIngredient(ItemID.ClayBlock, 25); // use 25 clay blocks
+	recipe.AddIngredient(ItemID.StoneBlock, 5); // use 5 stone blocks
+	recipe.Register(); // add the recipe to the game: 25 clay + 5 stone -> 1 item
+}</code></pre>
+		<p>Two more notes:</p>
+		<ul>
+			<li>You can omit the stack size in <code>AddIngredient()</code> if you only use one item.
+				For example, <code>AddIngredient(ItemID.IronPickaxe)</code> uses a single iron pickaxe.</li>
+			<li>If you want the recipe to result in multiple items being crafted, add an argument
+				to <code>CreateRecipe()</code>. For example, <code>Recipe recipe = CreateRecipe(5)</code>
+				results in 5 items being crafted.</li>
+		</ul>
+		<p>Another example:</p>
+		<pre><code class="language-cs">public override void AddRecipes() {
+	Recipe recipe = CreateRecipe(50); // 50 items will be crafted from this recipe
+	recipe.AddIngredient(ItemID.PlatinumAxe); // use a single platinum axe
+	recipe.Register(); // 1 platinum axe -> 50 items
+}</code></pre>
+		<p>You can also add multiple crafting recipes to an item.</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	Recipe recipe = CreateRecipe(); // recipe 1: uses gold axe
+	recipe.AddIngredient(ItemID.GoldAxe);
+	recipe.AddIngredient(ItemID.StoneBlock, 100);
+	recipe.Register();
+
+	recipe = CreateRecipe(); // recipe 2: uses platinum axe
+	recipe.AddIngredient(ItemID.PlatinumAxe);
+	recipe.AddIngredient(ItemID.StoneBlock, 100);
+	recipe.Register();
+}</code></pre>
+
+		<h2 id="2">Crafting station requirement</h2>
+		<p>Usually, an item should only be craftable near a workbench, anvil or some other crafting station.<br>
+			To do this, you can use <code>recipe.AddTile()</code>. This method takes in one argument, the tile
+			you need to be near to craft the item. You represent this tile with <code>TileID.SomeTile</code>:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	Recipe recipe = CreateRecipe();
+	recipe.AddIngredient(ItemID.SandBlock, 10);
+	recipe.AddIngredient(ItemID.CopperBar);
+	recipe.AddTile(TileID.WorkBenches); // make the item craftable at a workbench
+	recipe.Register();
+}</code></pre>
+		<p>Yes, you can set it to any tile, which means you can make recipes craftable near a dirt block,
+			crimson vines, or anything else. <a href="https://terraria.wiki.gg/wiki/Tile_IDs">Here is a wiki page</a>
+			for tile IDs.</p>
+		<p>If a recipe has multiple tiles, you need to be near all of them at once to craft the item.</p>
+
+		<h2 id="3">Chain syntax</h2>
+		<p>You can also create recipes by chaining methods. What this means is you don't create a
+			<code>recipe</code> variable, but directly call <code>CreateRecipe()</code>, then chain the
+			<code>AddIngredient()</code> and <code>AddTile()</code> methods on it.</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	// no variable is defined, you just chain the methods
+	CreateRecipe()
+		.AddIngredient(ItemID.SandBlock, 10)
+		.AddIngredient(ItemID.CopperBar)
+		.AddTile(TileID.WorkBenches)
+		.Register();
+
+	CreateRecipe()
+		.AddIngredient(ItemID.SandBlock, 10)
+		.AddIngredient(ItemID.TinBar)
+		.AddTile(TileID.WorkBenches)
+		.Register();
+}</code></pre>
+		<p>This syntax looks cleaner and less wordy. There are two things to keep in mind with this approach:</p>
+		<ul>
+			<li>There is a period before every instruction after <code>CreateRecipe()</code>.</li>
+			<li>Only the last line, <code>.Register();</code>, has a semicolon.</li>
+		</ul>
+		<p>You can use whichever way you prefer. The guide will use this syntax from now on, but everything here
+			still applies to the other one.</p>
+
+		<h2 id="4">Modded ingredients</h2>
+		<p>Since <code>ItemID</code> only holds vanilla items, there's a different way to add ModItems as ingredients:
+			<code>.AddIngredient&lt;ModdedItem&gt;()</code>, where you replace <code>ModdedItem</code> with your
+			ModItem class. The stack size can also be specified as a parameter.<br>
+			An example:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	CreateRecipe()
+		.AddIngredient(ItemID.HallowedBar, 2) // vanilla ingredient
+		.AddIngredient&lt;TestItem&gt;(5) // modded ingredient - 5 TestItems
+		.AddIngredient&lt;TestSword&gt;() // a single TestSword
+		.Register();
+}</code></pre>
+		<p>You can also use modded tiles (ModTiles) as crafting stations with
+			<code>.AddTile&lt;ModdedTile&gt;()</code>:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	CreateRecipe()
+		.AddIngredient(ItemID.Wood, 200)
+		.AddTile&lt;CustomCraftingStation&gt;()
+		.Register();
+}</code></pre>
+
+		<h2 id="5">Recipe Groups</h2>
+		<p>If you wanted to use Wood in a crafting recipe, you would most likely use something like
+			<code>.AddIngredient(ItemID.Wood, 50)</code>. However, this would only accept regular forest Wood,
+			meaning any Palm Wood or Boreal Wood wouldn't count. To solve this issue, we can use Recipe Groups.</p>
+		<p>Recipe groups are a type of ingredient that counts as one ingredient, but accepts multiple items.<br>
+			To solve our previous issue, instead of a Wood ingredient, we would add a Wood recipe group,
+			which counts any type of wood.<br>
+			To use a recipe group, you call <code>.AddRecipeGroup()</code>. This acts exactly like
+			<code>.AddIngredient()</code>, but you specify a <code>RecipeGroupID</code> instead of an
+			<code>ItemID</code>.</p>
+		<p>To add the Wood recipe group, you would do <code>.AddRecipeGroup(RecipeGroupID.Wood, 50)</code>.
+			Now, you would be able to craft the item with any type of wood, say 30 Palm Wood and 20
+			Boreal Wood.</p>
+		<p>An example use of recipe groups:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	CreateRecipe()
+		.AddIngredient(ItemID.Obsidian, 20) // regular ingredient: 20 obsidian
+		.AddRecipeGroup(RecipeGroupID.Wood, 50) // 50 wood of any type
+		.AddRecipeGroup(RecipeGroupID.IronBar, 5) // 5 iron bars or lead bars
+		.AddTile(TileID.Anvils) // tile: craftable at anvil
+		.Register();
+}</code></pre>
+		<p>Besides <code>Wood</code>, <code>IronBar</code>, <code>Sand</code> and <code>Fragment</code>,
+			there aren't many useful recipe groups. You can make custom recipe groups, but it's a bit hard to do so,
+			they will be discussed later.</p>
+
+		<h2 id="6">Conditions</h2>
+		<p>You can add extra conditions that must be satisfied to craft the item. There are a lot of conditions,
+			concerning basically everything. For a full list, you can
+			<a href="https://github.com/tModLoader/tModLoader/blob/stable/patches/tModLoader/Terraria/Condition.cs">
+				go here</a>.
+		</p>
+		<p>To add a condition, you use <code>.AddCondition()</code>, and you can specify an argument using
+			<code>Condition</code>. For example, <code>.AddCondition(Condition.BloodMoon)</code>, makes the item
+			only craftable on a blood moon.</p>
+		<p>Here are a few conditions:</p>
+		<pre><code class="language-cs">public override void AddRecipes()
+{
+	CreateRecipe()
+		.AddIngredient(ItemID.DirtBlock)
+		.AddCondition(Condition.Hardmode) // only in hardmode
+		.AddCondition(Condition.InDesert) // only in a desert
+		.AddCondition(Condition.BloodMoon) // only during a blood moon
+		.AddCondition(Condition.NearWater) // only near water - NearLava, NearHoney and NearShimmer work too
+		.AddCondition(Condition.DownedMoonLord) // only after killing moon lord
+		.AddCondition(Condition.ForTheWorthyWorld) // only in a for the worthy world
+		.AddCondition(Condition.InExpertMode) // only in expert mode
+		.AddCondition(Condition.InUnderworld) // only in the underworld
+		.Register();
+}</code></pre>
+
+		<script src="../prism.js"></script>
+	</body>
+</html>
