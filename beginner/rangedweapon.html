@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ranged Weapon - tModLoader Guide</title>
+
+	<link rel="stylesheet" href="../style.css">
+	<link rel="stylesheet" href="../prism.css">
+</head>
+
+<body>
+	<h1>Ranged Weapon</h1>
+	<p>In this guide, you will learn how to make a ranged weapon, like a bow or a gun.</p>
+	<p>Table of contents:</p>
+	<ol>
+		<li><a href="#1">Creating a bow</a> - an arrow-based ranged weapon</li>
+		<li><a href="#2">Final bow example</a> - a full bow file</li>
+	</ol>
+
+	<h2 id="1">Creating a bow</h2>
+	<p>First, we have to make the base of the item. This is covered in the <a href="moditem.html">ModItem</a>
+		guide, or you can copy-paste it from here, like a real programmer.<br>
+		Make sure to add a texture. If you aren't drawing them yourself, you can steal it from somewhere
+		like the <a href="https://terraria.wiki.gg/wiki/Bows">vanilla bow textures</a>.</p>
+	<pre><code class="language-cs">using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items;
+ 
+public class TestBow : ModItem
+{
+	public override void SetDefaults()
+	{
+		Item.width = 28; // make sure to change this to your texture's size!
+		Item.height = 46; // make sure to change this to your texture's size!
+		Item.value = Item.sellPrice(0, 0, 40, 0);
+		Item.rare = ItemRarityID.Blue;
+	}
+
+	public override void AddRecipes()
+	{
+		CreateRecipe()
+			.AddIngredient&lt;TestItem&gt;(7)
+			.AddTile(TileID.Anvils)
+			.Register();
+	}
+}</code></pre>
+
+	<p>Making a bow is much easier than making a sword. We can call <code>Item.DefaultToBow(...)</code>
+		at the start of our <code>SetDefaults</code>, and it'll automatically set most of the properties
+		common to bows, like the ranged class and shooting arrows. This method has two arguments:</p>
+	<ol>
+		<li>The cooldown between shots, in frames. This is like the <code>Item.useTime</code>,
+			where a higher value means slower shots.</li>
+		<li>The velocity of the arrow. For reference, early ore bows have a velocity of 6.6.</li>
+	</ol>
+	<p>You can find reference values for both of these
+		<a href="https://terraria.wiki.gg/wiki/List_of_ranged_weapons">in here</a>.</p>
+	<p>Normally, you would call it like this: <code>Item.DefaultToBow(25, 6.6f);</code>
+		But now you have some numbers floating around without any indication of what they mean.<br>
+		These are known as "magic numbers", and it is good practice to make them more clear.
+		To do this, you can label them with named arguments, like:
+		<code>Item.DefaultToBow(singleShotTime:&nbsp;25,&nbsp;shotVelocity:&nbsp;6.6f);</code><br>
+		Note that in the case of named arguments, the labels must be exactly the name of the argument
+		(you can't change the name). It's up to you if you want to write it like this, but I'd recommend it,
+		since it's more readable.</p>
+	<p>This is how it should look:</p>
+	<pre><code class="language-cs">public override void SetDefaults()
+{
+	// bow properties
+	Item.DefaultToBow(singleShotTime: 25, shotVelocity: 6.6f);
+
+	// common item properties
+	Item.width = 28;
+	Item.height = 46;
+	Item.value = Item.sellPrice(0, 0, 40, 0);
+	Item.rare = ItemRarityID.Blue;
+}</code></pre>
+	<p>Now we can set the rest of the bow's stats. We can use the same properties as the melee weapon.<br>
+		<b>Tip:</b> Since the bow's attack speed was already accounted for, you don't need to set the
+		<code>Item.useTime</code> and <code>Item.useAnimation</code>.</p>
+<table>
+		<tr>
+			<th style="width: 10%;">Property</th>
+			<th style="width: 10%;">Data Type</th>
+			<th style="width: 30%;">Meaning</th>
+			<th style="width: 50%;">Tips</th>
+		</tr>
+		<tr>
+			<td><code>Item.damage</code></td>
+			<td>int</td>
+			<td>The weapon's base damage when used.</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><code>Item.knockBack</code></td>
+			<td>float</td>
+			<td>How far the attacked enemy is knocked.</td>
+			<td>Early pre-hardmode bows have no knockback. If you want this, you can omit this property.</td>
+		</tr>
+		<tr>
+			<td><code>Item.crit</code></td>
+			<td>int</td>
+			<td>The bonus critical chance of this weapon,<br>
+				on top of the base 4% crit chance.</td>
+			<td>For example, a value of 6 will give this weapon a 10% crit chance (4% + 6% = 10%).<br>
+				You don't have to set this if your weapon doesn't give a bonus crit chance, like most weapons.</td>
+		</tr>
+	</table>
+	<p>Now if you open the game and obtain the bow (don't forget to get some arrows!), you will be able to
+		shoot from it!</p>
+
+	<h2 id="2">Final bow example</h2>
+	<p>This code creates a basic bow:</p>
+	<pre><code class="language-cs">using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items;
+ 
+public class TestBow : ModItem
+{
+	public override void SetDefaults()
+	{
+		// bow properties
+		Item.DefaultToBow(singleShotTime: 20, shotVelocity: 8f); // sets all the bow's properties
+		Item.damage = 12;
+		Item.knockBack = 0.5f; // extremely weak knockback
+
+		// common item properties
+		Item.width = 28;
+		Item.height = 46;
+		Item.value = Item.sellPrice(0, 0, 45, 0); // sells for 45 silver
+		Item.rare = ItemRarityID.Blue;
+	}
+
+	public override void AddRecipes()
+	{
+		CreateRecipe()
+			.AddIngredient&lt;TestItem&gt;(8)
+			.AddTile(TileID.Anvils)
+			.Register();
+	}
+}</code></pre>
+
+	<br>
+
+	<script src="../prism.js"></script>
+</body>
+</html>
