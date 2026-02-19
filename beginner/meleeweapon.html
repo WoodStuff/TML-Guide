@@ -177,7 +177,7 @@ public class TestSword : ModItem
 	public override void AddRecipes()
 	{
 		CreateRecipe() // 1 TestSword for...
-			.AddIngredient<TestItem>(8) // 8 TestItems
+			.AddIngredient&lt;TestItem&gt;(8) // 8 TestItems
 			.AddTile(TileID.Anvils) // at an anvil
 			.Register();
 	}
