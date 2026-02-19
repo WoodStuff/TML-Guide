@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>ModItem - tModLoader Guide</title>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ModItem - tModLoader Guide</title>
 
-		<link rel="stylesheet" href="../style.css">
-		<link rel="stylesheet" href="../prism.css">
-	</head>
+	<link rel="stylesheet" href="../style.css">
+	<link rel="stylesheet" href="../prism.css">
+</head>
 
-	<body>
-		<h1>ModItem</h1>
-		<p>ModItem is the simplest class. It is the class that every item derives from, including weapons,
-			accessories, and armor.</p>
-		<p>Table of contents:</p>
-		<ol>
-			<li><a href="#1">Creating an item</a> - coding the base for the item</li>
-			<li><a href="#2">Texturing the item</a> - giving the item a texture</li>
-			<li><a href="#3">Item properties</a> - customizing the item</li>
-			<li><a href="#4">Adding a crafting recipe</a> - making the item obtainable</li>
-			<li><a href="#5">Static Defaults</a> - extra specific properties, optional</li>
-			<li><a href="#6">Display name and tooltip</a> - adding a tooltip, optional</li>
-			<li><a href="#7">Final example</a> - a full item file</li>
-		</ol>
+<body>
+	<h1>ModItem</h1>
+	<p>ModItem is the simplest class. It is the class that every item derives from, including weapons,
+		accessories, and armor.</p>
+	<p>Table of contents:</p>
+	<ol>
+		<li><a href="#1">Creating an item</a> - coding the base for the item</li>
+		<li><a href="#2">Texturing the item</a> - giving the item a texture</li>
+		<li><a href="#3">Item properties</a> - customizing the item</li>
+		<li><a href="#4">Adding a crafting recipe</a> - making the item obtainable</li>
+		<li><a href="#5">Static Defaults</a> - extra specific properties, optional</li>
+		<li><a href="#6">Display name and tooltip</a> - adding a tooltip, optional</li>
+		<li><a href="#7">Final example</a> - a full item file</li>
+	</ol>
 
-		<h2 id="1">Creating an item</h2>
-		<p>Let's create a simple item. Create a new class in Content -> Items and name it whatever you want.
-			I'll call it TestItem.<br>
-			A common mistake for naming the class is using spaces, apostrophes or any other special character.
-			The computer won't understand this. In general, it's best to only use letters.</p>
-		<p>Like any other mod element, the item's class must be public and derive from the correct base element class.
-			In our case this class is <code>ModItem</code>.<br>
-			It should look like this:</p>
-		<pre><code class="language-cs">using Terraria; // these two will be needed later on
+	<h2 id="1">Creating an item</h2>
+	<p>Let's create a simple item. Create a new class in Content -> Items and name it whatever you want.
+		I'll call it TestItem.<br>
+		A common mistake for naming the class is using spaces, apostrophes or any other special character.
+		The computer won't understand this. In general, it's best to only use letters.</p>
+	<p>Like any other mod element, the item's class must be public and derive from the correct base element class.
+		In our case this class is <code>ModItem</code>.<br>
+		It should look like this:</p>
+	<pre><code class="language-cs">using Terraria; // these two will be needed later on
 using Terraria.ID; // these two will be needed later on
 using Terraria.ModLoader; // important!
 
@@ -42,31 +42,31 @@ namespace TutorialMod.Content.Items;
 public class TestItem : ModItem
 {
 }</code></pre>
-		<p>This is the base of a ModItem.<br>
-			The texture is a very important part of an item, so we'll go over that next.</p>
+	<p>This is the base of a ModItem.<br>
+		The texture is a very important part of an item, so we'll go over that next.</p>
 
-		<h2 id="2">Texturing the item</h2>
-		<p>Terraria's sprites use a style where each visible "pixel" is actually a 2x2 square of pixels.
-			A really easy way to make sprites like this is by first drawing the sprite in regular 1x1 pixels,
-			then resize the sprite 2x using the Nearest Neighbor option.<br>
-			Keep in mind the texture has to be a png file.<br>
-			If you don't have a texture, you can use
-			<a href="https://github.com/tModLoader/tModLoader/blob/1.4.4/ExampleMod/Content/Items/ExampleItem.png">
-				a texture like this</a> or anything else from ExampleMod.</p>
-		<p>Once the texture is ready, drop it into the same folder as your item file and make sure it's named
-			just like your item class' name - in my case, <code>TestItem.png</code>.</p>
+	<h2 id="2">Texturing the item</h2>
+	<p>Terraria's sprites use a style where each visible "pixel" is actually a 2x2 square of pixels.
+		A really easy way to make sprites like this is by first drawing the sprite in regular 1x1 pixels,
+		then resize the sprite 2x using the Nearest Neighbor option.<br>
+		Keep in mind the texture has to be a png file.<br>
+		If you don't have a texture, you can use
+		<a href="https://github.com/tModLoader/tModLoader/blob/1.4.4/ExampleMod/Content/Items/ExampleItem.png">
+		a texture like this</a> or anything else from ExampleMod.</p>
+	<p>Once the texture is ready, drop it into the same folder as your item file and make sure it's named
+		just like your item class' name - in my case, <code>TestItem.png</code>.<br></p>
 
-		<h2 id="3">Item properties</h2>
-		<p>Now we are ready to customize the item. There are two "hooks" (methods)
-			that serve this purpose - <code>SetDefaults</code> and <code>SetStaticDefaults</code>.
-		</p>
-		<p>Most properties are set in the <code>SetDefaults</code> hook.
-			If you're coding in Visual Studio, you can type <code>override</code> to search for the hooks
-			you can override, including SetDefaults.<br>
-			Item properties are set like this: <code>Item.maxStack = 100;</code> This property, for example, sets
-			the maximum amount of items in a stack to 100.</p>
-		<p>A really basic item's structure would look like this:</p>
-		<pre><code class="language-cs">using Terraria;
+	<h2 id="3">Item properties</h2>
+	<p>Now we are ready to customize the item. There are two "hooks" (methods)
+		that serve this purpose - <code>SetDefaults</code> and <code>SetStaticDefaults</code>.
+	</p>
+	<p>Most properties are set in the <code>SetDefaults</code> hook.
+		If you're coding in Visual Studio, you can type <code>override</code> to search for the hooks
+		you can override, including SetDefaults.<br>
+		Item properties are set like this: <code>Item.maxStack = 100;</code> This property, for example, sets
+		the maximum amount of items in a stack to 100.</p>
+	<p>A really basic item's structure would look like this:</p>
+	<pre><code class="language-cs">using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -85,52 +85,51 @@ public class TestItem : ModItem
 		Item.maxStack = 100; // make the item stackable up to 100
 	}
 }</code></pre>
-		<p>Below are the most important things you can set for regular items.<br></p>
-		
-		<table>
-			<tr>
-				<th style="width: 10%;">Property</th>
-				<th style="width: 10%;">Data Type</th>
-				<th style="width: 30%;">Meaning</th>
-				<th style="width: 50%;">Tips</th>
-			</tr>
-			<tr>
-				<td><code>Item.width</code><br><code>Item.height</code></td>
-				<td><code>int</code></td>
-				<td>The size of the item's sprite when held, dropped etc.</td>
-				<td>Set this to the texture's width and height respectively.</td>
-			</tr>
-			<tr>
-				<td><code>Item.maxStack</code></td>
-				<td><code>int</code></td>
-				<td>The maximum amount of items a stack can hold.</td>
-				<td>For most items, you should set this to <code>Item.CommonMaxStack</code>,
-					which evaluates to 9999.<br>
-					If it doesn't understand, add <code>using Terraria;</code> to the top.</td>
-			</tr>
-			<tr>
-				<td><code>Item.value</code></td>
-				<td><code>int</code></td>
-				<td>The amount of copper coins this item can be bought for, which is 5x the sell price.</td>
-				<td>Use <code>Item.sellPrice(p, g, s, c)</code> to generate a value from the sell price.<br>
-					For example, an item that sells for 21 gold, 55 silver and 50 copper:<br>
-					<code>Item.value = Item.sellPrice(0, 21, 55, 50);</code><br>
-					You can also use <code>Item.buyPrice(p, g, s, c)</code>.</td>
-			</tr>
-			<tr>
-				<td><code>Item.rare</code></td>
-				<td><code>ItemRarityID</code></td>
-				<td>The item's rarity (color of the name).</td>
-				<td>Use with ItemRarityID, something like: <code>Item.rare = ItemRarityID.Blue;</code></td>
-			</tr>
-		</table>
+	<p>Below are the most important things you can set for regular items.<br></p>
+	<table>
+		<tr>
+			<th style="width: 10%;">Property</th>
+			<th style="width: 10%;">Data Type</th>
+			<th style="width: 30%;">Meaning</th>
+			<th style="width: 50%;">Tips</th>
+		</tr>
+		<tr>
+			<td><code>Item.width</code><br><code>Item.height</code></td>
+			<td><code>int</code></td>
+			<td>The size of the item's sprite when held, dropped etc.</td>
+			<td>Set this to the texture's width and height respectively.</td>
+		</tr>
+		<tr>
+			<td><code>Item.maxStack</code></td>
+			<td><code>int</code></td>
+			<td>The maximum amount of items a stack can hold.</td>
+			<td>For most items, you should set this to <code>Item.CommonMaxStack</code>,
+				which evaluates to 9999.<br>
+				If it doesn't understand, add <code>using Terraria;</code> to the top.</td>
+		</tr>
+		<tr>
+			<td><code>Item.value</code></td>
+			<td><code>int</code></td>
+			<td>The amount of copper coins this item can be bought for, which is 5x the sell price.</td>
+			<td>Use <code>Item.sellPrice(p, g, s, c)</code> to generate a value from the sell price.<br>
+				For example, an item that sells for 21 gold, 55 silver and 50 copper:<br>
+				<code>Item.value = Item.sellPrice(0, 21, 55, 50);</code><br>
+				You can also use <code>Item.buyPrice(p, g, s, c)</code>.</td>
+		</tr>
+		<tr>
+			<td><code>Item.rare</code></td>
+			<td><code>ItemRarityID</code></td>
+			<td>The item's rarity (color of the name).</td>
+			<td>Use with ItemRarityID, something like: <code>Item.rare = ItemRarityID.Blue;</code></td>
+		</tr>
+	</table>
 
-		<p>There are many more properties specific to weapons, armor and other specific things, but they will be
-			introduced later when we learn about them.<br>
-			A full list of item properties
-			<a href="https://github.com/tModLoader/tModLoader/wiki/Item-Class-Documentation">can be found here</a>.</p>
-		<p>Here is an example item with these 5 properties filled out:</p>
-		<pre><code class="language-cs">using Terraria;
+	<p>There are many more properties specific to weapons, armor and other specific things, but they will be
+		introduced later when we learn about them.<br>
+		A full list of item properties
+		<a href="https://github.com/tModLoader/tModLoader/wiki/Item-Class-Documentation">can be found here</a>.</p>
+	<p>Here is an example item with these 5 properties filled out:</p>
+	<pre><code class="language-cs">using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -152,31 +151,31 @@ public class TestItem : ModItem
 		Item.rare = ItemRarityID.Blue; // blue rarity
 	}
 }</code></pre>
-		<p>This is now a fully functional item. While it exists, it's unobtainable, so the next step is making it
-			craftable.</p>
-		<p><b>Tip:</b> You can use a mod like
-			<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2563784437">Cheat Sheet</a>
-			to give yourself any item for testing, so you can obtain it even if it's not craftable yet.</p>
+	<p>This is now a fully functional item. While it exists, it's unobtainable, so the next step is making it
+		craftable.</p>
+	<p><b>Tip:</b> You can use a mod like
+		<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2563784437">Cheat Sheet</a>
+		to give yourself any item for testing, so you can obtain it even if it's not craftable yet.</p>
 
-		<h2 id="4">Adding a crafting recipe</h2>
-		<p>Crafting recipes are added in another hook, <code>AddRecipes</code>. In other words, it's a method that goes
-			alongside the two SetDefaults hooks.</p>
-		<p>Each recipe starts by creating a <code>Recipe</code> variable through <code>CreateRecipe()</code>:</p>
-		<pre><code class="language-cs">public override void AddRecipes()
+	<h2 id="4">Adding a crafting recipe</h2>
+	<p>Crafting recipes are added in another hook, <code>AddRecipes</code>. In other words, it's a method that goes
+		alongside the two SetDefaults hooks.</p>
+	<p>Each recipe starts by creating a <code>Recipe</code> variable through <code>CreateRecipe()</code>:</p>
+	<pre><code class="language-cs">public override void AddRecipes()
 {
 	Recipe recipe = CreateRecipe(); // create a recipe resulting in this item
 	// ...
 }</code></pre>
-		<p>Now we can start adding ingredients. To do that, you call <code>recipe.AddIngredient()</code>.
-			This method takes two parameters.<br>
-			The first parameter is the item used as the ingredient. You can use <code>ItemID</code>
-			to represent an item for this, like <code>ItemID.StoneBlock</code> for stone. If you use
-			Visual Studio, it should autocomplete the IDs, otherwise you can use
-			<a href="https://terraria.wiki.gg/wiki/Item_IDs">this wiki page</a>.<br>
-			The second parameter is the amount of the item needed. You can leave this blank if you only
-			use one item.</p>
-		<p>A few examples:</p>
-		<pre><code class="language-cs">public override void AddRecipes()
+	<p>Now we can start adding ingredients. To do that, you call <code>recipe.AddIngredient()</code>.
+		This method takes two parameters.<br>
+		The first parameter is the item used as the ingredient. You can use <code>ItemID</code>
+		to represent an item for this, like <code>ItemID.StoneBlock</code> for stone. If you use
+		Visual Studio, it should autocomplete the IDs, otherwise you can use
+		<a href="https://terraria.wiki.gg/wiki/Item_IDs">this wiki page</a>.<br>
+		The second parameter is the amount of the item needed. You can leave this blank if you only
+		use one item.</p>
+	<p>A few examples:</p>
+	<pre><code class="language-cs">public override void AddRecipes()
 {
 	Recipe recipe = CreateRecipe(); // start the recipe
 	recipe.AddIngredient(ItemID.StoneBlock, 10); // 10 stone blocks
@@ -184,98 +183,97 @@ public class TestItem : ModItem
 	recipe.AddIngredient(ItemID.IronShortsword); // a single iron shortsword
 	recipe.Register(); // add the recipe to the game
 }</code></pre>
-		<p>Now the recipe is craftable in-game!</p>
-		<p>As you can see, there is a <code>recipe.Register()</code> at the end. You add this to the end
-			to make sure the recipe gets registered to the game.</p>
-		<p>You can make the recipe craft multiple items by adding an argument to <code>CreateRecipe()</code>:</p>
-		<pre><code class="language-cs">public override void AddRecipes()
+	<p>Now the recipe is craftable in-game!</p>
+	<p>As you can see, there is a <code>recipe.Register()</code> at the end. You add this to the end
+		to make sure the recipe gets registered to the game.</p>
+	<p>You can make the recipe craft multiple items by adding an argument to <code>CreateRecipe()</code>:</p>
+	<pre><code class="language-cs">public override void AddRecipes()
 {
 	Recipe recipe = CreateRecipe(10); // 10 TestItems are crafted from this method
 	recipe.AddIngredient(ItemID.HellstoneBar); // recipe takes in a single hellstone bar
 	recipe.Register(); // 1 hellstone bar -> 10 TestItems
 }</code></pre>
-		<p>To make the recipe require a crafting station, you can use <code>AddTile()</code>. This time, you use
-			<code>TileID</code> for the argument.
-			<a href="https://terraria.wiki.gg/wiki/Tile_IDs">Here is a wiki page</a> for the tile IDs.<br>
-			Here is a recipe making the item only craftable at an anvil:</p>
-		<pre><code class="language-cs">public override void AddRecipes()
+	<p>To make the recipe require a crafting station, you can use <code>AddTile()</code>. This time, you use
+		<code>TileID</code> for the argument.
+		<a href="https://terraria.wiki.gg/wiki/Tile_IDs">Here is a wiki page</a> for the tile IDs.<br>
+		Here is a recipe making the item only craftable at an anvil:</p>
+	<pre><code class="language-cs">public override void AddRecipes()
 {
 	Recipe recipe = CreateRecipe();
 	recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
 	recipe.AddTile(TileID.Anvils); // make item craftable at any anvil (regular & hardmode)
 	recipe.Register();
 }</code></pre>
-		<p>Crafting recipes are explored more thoroughly in the <a href="recipes.html">recipe guide</a>.</p>
+	<p>Crafting recipes are explored more thoroughly in the <a href="recipes.html">recipe guide</a>.</p>
 
-		<h2 id="5">Static Defaults</h2>
-		<p>The <code>SetStaticDefaults</code> hook also sets item properties, but in a different way.<br>
-			Outside the item classes, the game holds "sets" - key-value pairs, which encode additional info
-			about each item. These can be like the research count for journey mode, or if the item floats
-			when dropped (like souls). You don't need to set any of these properties, or any at all.</p>
-		<p>There is one property that is simpler to set than the rest - the number of items needed to
-			research an item in Journey Mode.<br>
-			You set this one just like the <code>SetDefaults</code> properties, difference being that you have
-			to put it in the other method:</p>
-		<pre><code class="language-cs">public override void SetStaticDefaults()
+	<h2 id="5">Static Defaults</h2>
+	<p>The <code>SetStaticDefaults</code> hook also sets item properties, but in a different way.<br>
+		Outside the item classes, the game holds "sets" - key-value pairs, which encode additional info
+		about each item. These can be like the research count for journey mode, or if the item floats
+		when dropped (like souls). You don't need to set any of these properties, or any at all.</p>
+	<p>There is one property that is simpler to set than the rest - the number of items needed to
+		research an item in Journey Mode.<br>
+		You set this one just like the <code>SetDefaults</code> properties, difference being that you have
+		to put it in the other method:</p>
+	<pre><code class="language-cs">public override void SetStaticDefaults()
 {
 	Item.ResearchUnlockCount = 100; // 100 items are needed to unlock duplication for this item
 }</code></pre>
-		<p>The rest of the properties are accessed like: <code>ItemID.Sets.SomeProperty[Type]</code>, where you
-			replace <code>SomeProperty</code> with the property you want to change. Visual Studio should be able to
-			show a list of all the properties, but here are some useful ones:</p>
+	<p>The rest of the properties are accessed like: <code>ItemID.Sets.SomeProperty[Type]</code>, where you
+		replace <code>SomeProperty</code> with the property you want to change. Visual Studio should be able to
+		show a list of all the properties, but here are some useful ones:</p>
+	<table>
+		<tr>
+			<th style="width: 20%;">Property</th>
+			<th style="width: 10%;">Data Type</th>
+			<th style="width: 70%;">Meaning</th>
+		</tr>
+		<tr>
+			<td><code>ItemID.Sets.ItemNoGravity[Type]</code></td>
+			<td><code>bool</code></td>
+			<td>Decides if the item should float in the air when dropped, like souls.</td>
+		</tr>
+		<tr>
+			<td><code>ItemID.Sets.ItemIconPulse[Type]</code></td>
+			<td><code>bool</code></td>
+			<td>Decides if the item should pulse (sprite grows and shrinks) in the inventory and when dropped,
+				like souls.</td>
+		</tr>
+		<tr>
+			<td><code>ItemID.Sets.OreDropsFromSlime[Type]</code></td>
+			<td><code>(int, int)</code></td>
+			<td>Makes an item a rare drop from slimes if it's an ore.<br>
+				The type represents the minimum and maximum amounts droppable. This is a tuple - you can create
+				one like <code>(3, 13)</code>.</td>
+		</tr>
+	</table>
 
-		<table>
-			<tr>
-				<th style="width: 20%;">Property</th>
-				<th style="width: 10%;">Data Type</th>
-				<th style="width: 70%;">Meaning</th>
-			</tr>
-			<tr>
-				<td><code>ItemID.Sets.ItemNoGravity[Type]</code></td>
-				<td><code>bool</code></td>
-				<td>Decides if the item should float in the air when dropped, like souls.</td>
-			</tr>
-			<tr>
-				<td><code>ItemID.Sets.ItemIconPulse[Type]</code></td>
-				<td><code>bool</code></td>
-				<td>Decides if the item should pulse (sprite grows and shrinks) in the inventory and when dropped,
-					like souls.</td>
-			</tr>
-			<tr>
-				<td><code>ItemID.Sets.OreDropsFromSlime[Type]</code></td>
-				<td><code>(int, int)</code></td>
-				<td>Makes an item a rare drop from slimes if it's an ore.<br>
-					The type represents the minimum and maximum amounts droppable. This is a tuple - you can create
-					one like <code>(3, 13)</code>.</td>
-			</tr>
-		</table>
-
-		<p>Here is a <code>SetStaticDefaults</code> that would hypothetically implement all of these properties:</p>
-		<pre><code class="language-cs">public override void SetStaticDefaults()
+	<p>Here is a <code>SetStaticDefaults</code> that would hypothetically implement all of these properties:</p>
+	<pre><code class="language-cs">public override void SetStaticDefaults()
 {
 	Item.ResearchUnlockCount = 100;
 	ItemID.Sets.ItemNoGravity[Type] = true; // item floats in the air
 	ItemID.Sets.ItemIconPulse[Type] = true; // item pulses in inventory
 	ItemID.Sets.OreDropsFromSlime[Type] = (3, 13); // all ores use this value
 }</code></pre>
-		<p>Again, not every item has to set these properties. It's usually enough to just set the research
-			unlock count.</p>
+	<p>Again, not every item has to set these properties. It's usually enough to just set the research
+		unlock count.</p>
 
-		<h2 id="6">Display name and tooltip</h2>
-		<p>The file at Localization -> <code>en-US_Mods.modname.hjson</code> stores items' display names
-			and tooltips. These get automatically generated on Build and Reload.<br>
-			When you build and reload, something like this should appear in the file:</p>
-		<pre><code class="language-hjson">TestItem: {
+	<h2 id="6">Display name and tooltip</h2>
+	<p>The file at Localization -> <code>en-US_Mods.modname.hjson</code> stores items' display names
+		and tooltips. These get automatically generated on Build and Reload.<br>
+		When you build and reload, something like this should appear in the file:</p>
+	<pre><code class="language-hjson">TestItem: {
 	DisplayName: Test Item
 	Tooltip: ""
 }</code></pre>
-		<p>You can change these two values if you want to, but usually these default values work fine. You can omit
-			the quotes in the Tooltip if you're going to add one.<br>
-			Multiline tooltips can be written between ''' marks, like the Example Sword does it.</p>
+	<p>You can change these two values if you want to, but usually these default values work fine. You can omit
+		the quotes in the Tooltip if you're going to add one.<br>
+		Multiline tooltips can be written between ''' marks, like the Example Sword does it.</p>
 
-		<h2 id="7">Final example</h2>
-		<p>A completed item file would look something like this:</p>
-		<pre><code class="language-cs">using Terraria;
+	<h2 id="7">Final example</h2>
+	<p>A completed item file would look something like this:</p>
+	<pre><code class="language-cs">using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -308,8 +306,8 @@ public class TestItem : ModItem
 	}
 }</code></pre>
 
-		<br>
+	<br>
 
-		<script src="../prism.js"></script>
-	</body>
+	<script src="../prism.js"></script>
+</body>
 </html>
