@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 	color: #111111;
 }
-p, h1, h2, h3, li, table { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+p, h1, h2, h3, li, table { font-family: 'Segoe UI', sans-serif; }
 html, body {
 	height: 100%;
 }
