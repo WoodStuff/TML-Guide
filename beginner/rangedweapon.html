@@ -17,6 +17,8 @@
 	<ol>
 		<li><a href="#1">Creating a bow</a> - an arrow-based ranged weapon</li>
 		<li><a href="#2">Final bow example</a> - a full bow file</li>
+		<li><a href="#3">Creating a gun</a> - a bullet-based ranged weapon</li>
+		<li><a href="#4">Final gun example</a> - a full gun file</li>
 	</ol>
 
 	<h2 id="1">Creating a bow</h2>
@@ -51,7 +53,7 @@ public class TestBow : ModItem
 
 	<p>Making a bow is much easier than making a sword. We can call <code>Item.DefaultToBow(...)</code>
 		at the start of our <code>SetDefaults</code>, and it'll automatically set most of the properties
-		common to bows, like the ranged class and shooting arrows. This method has two arguments:</p>
+		common to bows, like the ranged class and shooting arrows. This method has two parameters:</p>
 	<ol>
 		<li>The cooldown between shots, in frames. This is like the <code>Item.useTime</code>,
 			where a higher value means slower shots.</li>
@@ -63,7 +65,7 @@ public class TestBow : ModItem
 		But now you have some numbers floating around without any indication of what they mean.<br>
 		These are known as "magic numbers", and it is good practice to make them more clear.
 		To do this, you can label them with named arguments, like:
-		<code>Item.DefaultToBow(singleShotTime:&nbsp;25,&nbsp;shotVelocity:&nbsp;6.6f);</code><br>
+		<code>Item.DefaultToBow(singleShotTime:&nbsp;25, shotVelocity:&nbsp;6.6f);</code><br>
 		Note that in the case of named arguments, the labels must be exactly the name of the argument
 		(you can't change the name). It's up to you if you want to write it like this, but I'd recommend it,
 		since it's more readable.</p>
@@ -80,7 +82,7 @@ public class TestBow : ModItem
 	Item.rare = ItemRarityID.Blue;
 }</code></pre>
 	<p>Now we can set the rest of the bow's stats. We can use the same properties as the melee weapon.<br>
-		<b>Tip:</b> Since the bow's attack speed was already accounted for, you don't need to set the
+		<b>Note:</b> Since the bow's attack speed was already accounted for, we don't need to set the
 		<code>Item.useTime</code> and <code>Item.useAnimation</code>.</p>
 <table>
 		<tr>
@@ -99,7 +101,7 @@ public class TestBow : ModItem
 			<td><code>Item.knockBack</code></td>
 			<td>float</td>
 			<td>How far the attacked enemy is knocked.</td>
-			<td>Early pre-hardmode bows have no knockback. If you want this, you can omit this property.</td>
+			<td>Early pre-hardmode bows have no knockback. If you want that, you can omit this property.</td>
 		</tr>
 		<tr>
 			<td><code>Item.crit</code></td>
@@ -144,6 +146,105 @@ public class TestBow : ModItem
 			.AddTile(TileID.Anvils)
 			.Register();
 	}
+}</code></pre>
+
+	<h2 id="3">Creating a gun</h2>
+	<p>Just like before, a gun requires the creation of a <code>ModItem</code> and a texture. Here is a convenient
+		<a href="https://github.com/tModLoader/tModLoader/blob/1.4.4/ExampleMod/Content/Items/Weapons/ExampleGun.png">
+		link to a gun texture</a>. Make sure to set your basic item stats and add a recipe.</p>
+	<p>Guns don't have a specific <code>DefaultToGun(...)</code> method, so at the start of our
+		<code>SetDefaults</code>, we'll have to call <code>Item.DefaultToRangedWeapon(...)</code> instead,
+		which defines a more general ranged weapon. This method has 4 parameters:</p>
+	<ol>
+		<li><b>baseProjType:</b> The projectile shot by the weapon. In our case, guns are hardcoded
+			to always shoot bullets, so we can set this to whatever we want.<br>
+			By convention, all guns have this set to <code>ProjectileID.PurificationPowder</code>.</li>
+		<li><b>ammoID:</b> The ammo type consumed by the weapon. Guns fire bullets, so we'll use
+			<code>AmmoID.Bullet</code>.</li>
+		<li><b>singleShotTime:</b> The cooldown between shots, in frames. This does the same thing as in
+			<code>Item.DefaultToBow(...)</code>.</li>
+		<li><b>shotVelocity:</b> The velocity of the arrow. Again, same thing as in
+			<code>Item.DefaultToBow(...)</code>.</li>
+	</ol>
+	<p>After calling this method, you can set the stats (<code>Item.damage</code>, <code>Item.knockBack</code>,
+		<code>Item.crit</code>) like usual.</p>
+	<p>This is how the <code>SetDefaults</code> should look:</p>
+	<pre><code class="language-cs">public override void SetDefaults()
+{
+	// gun properties          // doesn't matter what we put here             // gun uses bullets
+	Item.DefaultToRangedWeapon(baseProjType: ProjectileID.PurificationPowder, ammoID: AmmoID.Bullet, singleShotTime: 24, shotVelocity: 12f);
+	Item.damage = 22;
+	Item.knockBack = 5f; // average knockback
+
+	// common item properties
+	Item.width = 62;
+	Item.height = 32;
+	Item.value = Item.sellPrice(0, 0, 50, 0);
+	Item.rare = ItemRarityID.Blue;
+}</code></pre>
+	<p>This is now a functional gun you can shoot bullets from.</p>
+	<p>Depending on the texture you used, the positioning of the gun in the player's hands might look weird,
+		holding the wrong part of the gun, like in the <a href="https://github.com/tModLoader/tModLoader/blob/1.4.4/ExampleMod/Content/Items/Weapons/ExampleGun.png">
+		ExampleGun sprite</a>.<br>
+		We can adjust where the player holds the gun by adding the <code>HoldoutOffset()</code> hook -
+		hooks are methods we override from <code>ModItem</code> to add custom behavior to an item,
+		like moving the gun's sprite in our case. If you're using Visual Studio, you can type <code>override</code>
+		in the class then autocomplete <code>HoldoutOffset()</code> to easily override it.<br>
+		This method returns a vector that moves the in-game gun texture. Feel free to play around with it
+		until it looks natural (hot reload recommended).<br>
+		For the ExampleGun sprite, I find a value of [2, -2] to look good. Here's the structure of the file
+		after adding the new hook:</p>
+		<pre><code class="language-cs">using Microsoft.Xna.Framework; // important for Vector2!
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items;
+ 
+public class TestGun : ModItem
+{
+	/* SetDefaults() */
+	/* AddRecipes() */
+
+	public override Vector2? HoldoutOffset() => new Vector2(2, -2);
+}</code></pre>
+
+	<h2 id="4">Final gun example</h2>
+	<p>This code will add a basic gun into the game:</p>
+	<pre><code class="language-cs">using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items;
+ 
+public class TestGun : ModItem
+{
+	public override void SetDefaults()
+	{
+		// gun properties          // doesn't matter what we put here             // gun uses bullets
+		Item.DefaultToRangedWeapon(baseProjType: ProjectileID.PurificationPowder, ammoID: AmmoID.Bullet, singleShotTime: 18, shotVelocity: 10f);
+		Item.damage = 18;
+		Item.knockBack = 2f; // very weak knockback
+
+		// common item properties
+		Item.width = 62;
+		Item.height = 32;
+		Item.value = Item.sellPrice(0, 0, 75, 0);
+		Item.rare = ItemRarityID.Blue;
+	}
+
+	public override void AddRecipes()
+	{
+		CreateRecipe()
+			.AddIngredient&lt;TestItem&gt;(12)
+			.AddRecipeGroup(RecipeGroupID.IronBar, 12)
+			.AddTile(TileID.Anvils)
+			.Register();
+	}
+
+	// adjust the gun's position in the player's hands
+	public override Vector2? HoldoutOffset() => new Vector2(2, -2);
 }</code></pre>
 
 	<br>
