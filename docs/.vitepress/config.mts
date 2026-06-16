@@ -1,28 +1,25 @@
 import { defineConfig } from 'vitepress'
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "tModLoader Guide",
-  description: "Guide for tModLoader",
-  themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
-    ],
+	title: "tModLoader Guide",
+	
+	themeConfig: {
+		aside: false,
 
-    sidebar: [
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
-    ],
+		sidebar: [
+			{
+				text: 'Beginner',
+				items: [
+					{ text: 'ModItem', link: '/beginner/moditem' },
+					{ text: 'Recipes', link: '/beginner/recipes' },
+					{ text: 'Melee Weapon', link: '/beginner/meleeweapon' },
+					{ text: 'Ranged Weapon', link: '/beginner/rangedweapon' },
+				]
+			}
+		],
 
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
-  }
+		socialLinks: [
+			{ icon: 'github', link: 'https://github.com/WoodStuff/TML-Guide' }
+		]
+	},
 })
