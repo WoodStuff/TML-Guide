@@ -16,6 +16,12 @@ export default defineConfig({
 					{ text: 'Ranged Weapon', link: '/beginner/ranged_weapon' },
 					{ text: 'Accessory', link: '/beginner/accessory' },
 				]
+			},
+			{
+				text: 'Miscellaneous',
+				items: [
+					{ text: 'Vanilla Textures', link: '/miscellaneous/vanilla_textures' },
+				]
 			}
 		],
 
