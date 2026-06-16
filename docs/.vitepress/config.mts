@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
 	title: 'tModLoader Guide',
+	description: 'Guide for tModLoader',
 	base: '/TML-Guide/',
 	
 	themeConfig: {
