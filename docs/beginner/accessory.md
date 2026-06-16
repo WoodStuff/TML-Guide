@@ -88,11 +88,11 @@ public override void UpdateAccessory(Player player, bool hideVisual)
 {
 	player.GetDamage(DamageClass.Generic) += 0.05f; // +5% to all damage
 	player.GetAttackSpeed(DamageClass.Melee) += 0.1f; // +10% melee attack speed
-	player.GetCritChance(DamageClass.Ranged) += 0.02f; // +2% ranged critical hit chance
-	player.GetKnockback(DamageClass.Magic) += 0.3f; // +30% magic knockback
+	player.GetKnockback(DamageClass.Ranged) += 0.3f; // +30% ranged knockback
 
-	// armor penetration uses absolute values instead of a multiplier!
-	player.GetArmorPenetration(DamageClass.Summon) += 4f; // +4 armor penetration for summons
+	// these two use absolute values instead of a multiplier!
+	player.GetCritChance(DamageClass.Magic) += 2; // +2% magic critical hit chance
+	player.GetArmorPenetration(DamageClass.Summon) += 4; // +4 armor penetration for summons
 }
 ```
 
@@ -182,7 +182,7 @@ public class TestAccessory : ModItem
 		player.statLifeMax2 += 20; // +20 max HP
 
 		player.GetDamage(DamageClass.Generic) += 0.2f; // +20% to all damage
-		player.GetCritChance(DamageClass.Magic) += 0.04f; // +4% magic crit chance
+		player.GetCritChance(DamageClass.Magic) += 4; // +4% magic crit chance
 		player.GetArmorPenetration(DamageClass.Magic) += 5; // +5 magic armor penetration
 	}
 }
