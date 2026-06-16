@@ -1,7 +1,7 @@
 # tModLoader Guide
 This is an unofficial guide for how to mod things into tModLoader.
 
-It is an extension to the [tModLoader wiki](https://github.com/tModLoader/tModLoader/wiki), which is a good resource, but only focuses on general things and doesn't go into more detail about things like weapons. Or sometimes [ExampleMod](https://github.com/tModLoader/tModLoader/wiki) has too many distracting features in an element or doesn't even have something. That's what this guide is for!
+It is an extension to the [tModLoader wiki](https://github.com/tModLoader/tModLoader/wiki), which is a good resource, but only focuses on general things and doesn't go into more detail about things like weapons. Or sometimes [ExampleMod](https://github.com/tModLoader/tModLoader/tree/1.4.5/ExampleMod) has too many distracting features in an element or doesn't even have something. That's what this guide is for!
 
 If you're new to modding, check out the [getting started guide](https://github.com/tModLoader/tModLoader/wiki/Basic-tModLoader-Modding-Guide) on the tModLoader wiki to learn how to set up your mod.
 
