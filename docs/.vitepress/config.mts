@@ -16,6 +16,7 @@ export default defineConfig({
 					{ text: 'Recipes', link: '/beginner/recipes' },
 					{ text: 'Melee Weapon', link: '/beginner/meleeweapon' },
 					{ text: 'Ranged Weapon', link: '/beginner/rangedweapon' },
+					{ text: 'Accessory', link: '/beginner/accessory' },
 				]
 			}
 		],
