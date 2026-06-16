@@ -103,7 +103,7 @@ Once you've set these properties, you can start the game, craft or cheat the swo
 ## Final example
 A working broadsword file would look something like this:
 
-```cs
+```cs{12-14,17-20}
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

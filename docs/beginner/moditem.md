@@ -207,7 +207,7 @@ The file at Localization -> `en-US_Mods.modname.hjson` stores items' display nam
 
 When you build and reload, something like this should appear in the file:
 
-```
+```txt
 TestItem: {
 	DisplayName: Test Item
 	Tooltip: ""

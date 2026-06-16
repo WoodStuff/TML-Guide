@@ -168,7 +168,7 @@ public class TestGun : ModItem
 
 This code will add a basic gun into the game:
 
-```cs
+```cs{13-15,34}
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

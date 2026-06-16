@@ -123,7 +123,7 @@ TestAccessory: {
 ## Final accessory example
 Here's an example file for an accessory:
 
-```cs
+```cs{12-13,29-37}
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
