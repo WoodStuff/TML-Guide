@@ -96,10 +96,33 @@ public override void UpdateAccessory(Player player, bool hideVisual)
 }
 ```
 
+## Making the accessory visible
+Some accessories are visible on the player when equipped. There are a few different positions where the accessory can be rendered, the most common ones are `Shield` (for shields), `Face` (for masks & similar), `HandsOn` (for rings), and `Neck` (for necklaces). All possible positions are in the `EquipType` enum.
+
+Once you know where your accessory will be rendered, you'll have to create a texture for the accessory when it's equipped. Doing this manually is really hard. A much easier way is to edit a vanilla texture ([here's a guide on how to access them](../miscellaneous/vanilla_textures)), but make sure the accessory equip type (render position) is the same.
+
+The texture should be in the same folder as the rest of your accessory files. Name it the same as the original texture, but add `_Type` at the end, where Type is the equip type. For example, a `WoodenShield` would have this file at `WoodenShield_Shield.png`. In my case, it'll be at `TestAcccessory_Neck.png`.
+
+Finally, we have to tell the game to render the accessory on the player. To do this, we can add the `AutoloadEquip(...)` attribute to the accessory's class, and pass in the equip type, like so:
+
+```cs{5}
+using Terraria.ModLoader;
+
+namespace TutorialMod.Content.Items;
+
+[AutoloadEquip(EquipType.Neck)]
+public class TestAccessory : ModItem
+{
+	// ...
+}
+```
+
+The accessory should now be rendered on the player! If it isn't, make sure you named the image file correctly (it should follow the format `AccessoryName_EquipType.png`), and you specified the correct equip type.
+
 ## Tooltip
 We still have to add a tooltip to the accessory to display what it buffs. This has been covered in the [ModItem guide](moditem#display-name-and-tooltip), but let's recap.
 
-When you build and reload your mod, new localization entries will get added to the file at  Localization -> `en-US_Mods.modname.hjson`. Each item will have a display name and tooltip attribute. Here you can add a descriptive tooltip about what your tooltip does.
+When you build and reload your mod, new localization entries will get added to the file at Localization -> `en-US_Mods.modname.hjson`. Each item will have a display name and tooltip attribute. Here you can add a descriptive tooltip about what your tooltip does.
 
 > [!NOTE]
 > Don't include the defense stat in the item's tooltip, as it is automatically added. If all your item does is add defense, you can skip adding a tooltip.
@@ -123,13 +146,14 @@ TestAccessory: {
 ## Final accessory example
 Here's an example file for an accessory:
 
-```cs{12-13,29-37}
+```cs{7,13-14,30-38}
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace TutorialMod.Content.Items;
 
+[AutoloadEquip(EquipType.Neck)] // render the accessory on the player's neck
 public class TestAccessory : ModItem
 {
 	public override void SetDefaults()
