@@ -11,3 +11,4 @@ These guides cover the most basic features that you can mod in. Keep in mind tha
 - [Recipes](beginner/recipes) - adding recipes to items
 - [Melee Weapon](beginner/meleeweapon) - making a sword
 - [Ranged Weapon](beginner/rangedweapon) - creating a bow and a gun
+- [Accessory](beginner/accessory) - equippable item that buffs the player
