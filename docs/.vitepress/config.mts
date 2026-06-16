@@ -12,8 +12,8 @@ export default defineConfig({
 				items: [
 					{ text: 'ModItem', link: '/beginner/moditem' },
 					{ text: 'Recipes', link: '/beginner/recipes' },
-					{ text: 'Melee Weapon', link: '/beginner/meleeweapon' },
-					{ text: 'Ranged Weapon', link: '/beginner/rangedweapon' },
+					{ text: 'Melee Weapon', link: '/beginner/melee_weapon' },
+					{ text: 'Ranged Weapon', link: '/beginner/ranged_weapon' },
 					{ text: 'Accessory', link: '/beginner/accessory' },
 				]
 			}

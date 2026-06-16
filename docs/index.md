@@ -9,6 +9,6 @@ If you're new to modding, check out the [getting started guide](https://github.c
 These guides cover the most basic features that you can mod in. Keep in mind that these require basic C# knowledge - you should know what classes are.
 - [ModItem](beginner/moditem) - creating a simple item and giving it a recipe
 - [Recipes](beginner/recipes) - adding recipes to items
-- [Melee Weapon](beginner/meleeweapon) - making a sword
-- [Ranged Weapon](beginner/rangedweapon) - creating a bow and a gun
+- [Melee Weapon](beginner/melee_weapon) - making a sword
+- [Ranged Weapon](beginner/ranged_weapon) - creating a bow and a gun
 - [Accessory](beginner/accessory) - equippable item that buffs the player
