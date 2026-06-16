@@ -6,8 +6,6 @@ export default defineConfig({
 	base: '/TML-Guide/',
 	
 	themeConfig: {
-		aside: false,
-
 		sidebar: [
 			{
 				text: 'Beginner',
