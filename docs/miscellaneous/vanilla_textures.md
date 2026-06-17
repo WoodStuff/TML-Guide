@@ -13,7 +13,7 @@ This will extract literally every texture the game uses. Here are a few texture 
 - **Items:** Their file name is `Item_XXX` where XXX is the item's ID. You can find the ID by searching the item on the [Terraria wiki](https://terraria.wiki.gg).
 - **Tiles:** Their file name is `Tile_XXX` where XXX is the tile's ID. You can find the ID on the wiki too, however keep in mind that tile IDs are different from item IDs.
 - **Accessory on player:** For some reason they are both in the Images folder and Images -> Accessories. Their file name is `Acc_Type_XXX`, where Type is the way it renders on the player (e.g. Shield), and XXX is some random number that I don't know what represents. You'll have to go one by one to find a specific texture.
-- **Armor on player:** Helmet and greaves are in the Images folder, breastplates are in Images -> Accessories. Their file name is `Armor_XXX` for breastplates, or `Armor_Head_XXX` or `Armor_Legs_XXX`, where similar to accessories the ID is meaningless and you'll have to guess which one is which.
+- **Armor on player:** Helmet and greaves are in the Images folder, breastplates are in Images -> Armor. Their file name is `Armor_XXX` for breastplates, or `Armor_Head_XXX` or `Armor_Legs_XXX`, where similar to accessories the ID is meaningless and you'll have to guess which one is which.
 
 If you don't want to run an .exe program on your computer, there's also a way to decompile assets in the browser.
 
