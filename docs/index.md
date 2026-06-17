@@ -12,3 +12,4 @@ These guides cover the most basic features that you can mod in. Keep in mind tha
 - [Melee Weapon](beginner/melee_weapon) - making a sword
 - [Ranged Weapon](beginner/ranged_weapon) - creating a bow and a gun
 - [Accessory](beginner/accessory) - equippable item that buffs the player
+- [Armor](beginner/armor) - adding 3 pieces of armor and a set bonus
